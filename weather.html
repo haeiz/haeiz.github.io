@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md mb-6">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">Weather Dashboard</h1>
+      <div class="space-x-4">
+        <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+        <a href="crypto.html" class="text-gray-700 hover:text-blue-600 font-medium">Crypto Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Country & City Selection -->
+  <section class="max-w-2xl mx-auto px-4 mb-8">
+    <label class="block text-lg font-medium mb-2">Select Country and City</label>
+    <div class="mb-4">
+      <select id="countrySelect" onchange="updateCities()" class="w-full px-4 py-2 border rounded focus:outline-none">
+        <option value="malaysia">🇲🇾 Malaysia</option>
+        <option value="singapore">🇸🇬 Singapore</option>
+        <option value="thailand">🇹🇭 Thailand</option>
+        <option value="uk">🇬🇧 United Kingdom</option>
+        <option value="usa">🇺🇸 United States</option>
+      </select>
+    </div>
+    <div>
+      <select id="citySelect" onchange="getWeather()" class="w-full px-4 py-2 border rounded focus:outline-none">
+        <!-- Cities will be inserted dynamically -->
+      </select>
+    </div>
+  </section>
+
+  <!-- Weather Info + Forecast Chart -->
+<section class="max-w-6xl mx-auto px-4 mb-12">
+  <div class="flex flex-col lg:flex-row gap-8 items-stretch">
+
+    <!-- Weather Info Card  -->
+    <div id="weatherInfo" class="bg-white shadow-md rounded p-6 text-center flex flex-col justify-center lg:w-1/3 hidden">
+      <h2 class="text-2xl font-bold mb-2" id="cityName">City Name</h2>
+      <img id="weatherIcon" src="" alt="Weather Icon" class="w-20 h-20 mx-auto mb-4" />
+      <p class="text-gray-600 text-lg" id="temperature">Temperature: -- °C</p>
+      <p class="text-gray-600" id="condition">Condition: --</p>
+    </div>
+
+    <!-- Forecast Chart  -->
+    <div class="bg-white shadow-md rounded p-6 flex-1">
+      <h3 class="text-xl font-semibold mb-4">5-Day Forecast</h3>
+      <div class="overflow-x-auto">
+        <canvas id="forecastChart" class="min-w-[600px] w-full h-72"></canvas>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
+    &copy; 2025 Haeiz. All rights reserved.
+  </footer>
+
+  <!-- Script -->
+  <script>
+    let chart;
+
+    const cityOptions = {
+      malaysia: [
+        "Kuala Lumpur", "Putrajaya", "Shah Alam", "Petaling Jaya", "Johor Bahru",
+        "Kota Kinabalu", "Kuching", "George Town", "Ipoh", "Melaka", "Alor Setar", "Seremban", "Kuantan"
+      ],
+      singapore: ["Singapore"],
+      thailand: ["Bangkok", "Chiang Mai", "Phuket"],
+      uk: ["London", "Manchester", "Birmingham"],
+      usa: ["New York", "Los Angeles", "Chicago"]
+    };
+
+    function updateCities() {
+      const country = document.getElementById("countrySelect").value;
+      const citySelect = document.getElementById("citySelect");
+
+      citySelect.innerHTML = "";
+      cityOptions[country].forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+
+      citySelect.value = cityOptions[country][0];
+      getWeather();
+    }
+
+    async function getWeather() {
+      const city = document.getElementById("citySelect").value;
+      const apiKey = "fff3631f7d01395a00be860118e8ec59";
+
+      // Current weather
+      const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+      const weatherRes = await fetch(weatherUrl);
+      const weatherData = await weatherRes.json();
+
+      document.getElementById("weatherInfo").classList.remove("hidden");
+      document.getElementById("cityName").textContent = weatherData.name;
+      document.getElementById("temperature").textContent = "Temperature: " + weatherData.main.temp + " °C";
+      document.getElementById("condition").textContent = "Condition: " + weatherData.weather[0].description;
+      document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
+
+      // Forecast
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+      const forecastRes = await fetch(forecastUrl);
+      const forecastData = await forecastRes.json();
+
+      const dailyTemps = {};
+      forecastData.list.forEach(entry => {
+        if (entry.dt_txt.includes("12:00:00")) {
+          const date = entry.dt_txt.split(" ")[0];
+          dailyTemps[date] = entry.main.temp;
+        }
+      });
+
+      const labels = Object.keys(dailyTemps);
+      const temps = Object.values(dailyTemps);
+
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById("forecastChart"), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Forecast Temp (°C)',
+            data: temps,
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true
+            }
+          }
+        }
+      });
+    }
+
+    // Auto-detect country on load
+    window.onload = async () => {
+      try {
+        const geo = await fetch("https://ipapi.co/json").then(res => res.json());
+        const detectedCountry = geo.country_name.toLowerCase();
+        const map = {
+          "malaysia": "malaysia",
+          "singapore": "singapore",
+          "thailand": "thailand",
+          "united kingdom": "uk",
+          "united states": "usa"
+        };
+        const key = map[detectedCountry] || "malaysia";
+        document.getElementById("countrySelect").value = key;
+        updateCities();
+      } catch (e) {
+        console.log("Geo detection failed. Defaulting to Malaysia.");
+        document.getElementById("countrySelect").value = "malaysia";
+        updateCities();
+      }
+    };
+  </script>
+</body>
+</html>
