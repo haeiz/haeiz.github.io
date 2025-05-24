@@ -25,92 +25,72 @@
     <label class="block text-lg font-medium mb-2">Select Country and City</label>
     <div class="mb-4">
       <select id="countrySelect" onchange="updateCities()" class="w-full px-4 py-2 border rounded focus:outline-none">
-        <option value="malaysia">🇲🇾 Malaysia</option>
-        <option value="singapore">🇸🇬 Singapore</option>
-        <option value="thailand">🇹🇭 Thailand</option>
-        <option value="uk">🇬🇧 United Kingdom</option>
-        <option value="usa">🇺🇸 United States</option>
+        <!-- Country options populated dynamically -->
       </select>
     </div>
     <div>
       <select id="citySelect" onchange="getWeather()" class="w-full px-4 py-2 border rounded focus:outline-none">
-        <!-- Cities will be inserted dynamically -->
+        <!-- Cities populated dynamically -->
       </select>
     </div>
   </section>
 
-  <!-- Weather Info + Forecast Chart -->
-<section class="max-w-6xl mx-auto px-4 mb-12">
-  <div class="flex flex-col lg:flex-row gap-8 items-stretch">
-
-    <!-- Weather Info Card  -->
-    <div id="weatherInfo" class="bg-white shadow-md rounded p-6 text-center flex flex-col justify-center lg:w-1/3 hidden">
-      <h2 class="text-2xl font-bold mb-2" id="cityName">City Name</h2>
-      <img id="weatherIcon" src="" alt="Weather Icon" class="w-20 h-20 mx-auto mb-4" />
-      <p class="text-gray-600 text-lg" id="temperature">Temperature: -- °C</p>
-      <p class="text-gray-600" id="condition">Condition: --</p>
-    </div>
-
-    <!-- Forecast Chart  -->
-    <div class="bg-white shadow-md rounded p-6 flex-1">
-      <h3 class="text-xl font-semibold mb-4">5-Day Forecast</h3>
-      <div class="overflow-x-auto">
-        <canvas id="forecastChart" class="min-w-[600px] w-full h-72"></canvas>
+  <!-- Weather Info & Forecast -->
+  <section class="max-w-6xl mx-auto px-4 mb-12">
+    <div class="flex flex-col lg:flex-row gap-8 items-stretch">
+      <div id="weatherInfo" class="bg-white shadow-md rounded p-6 text-center flex flex-col justify-center lg:w-1/3 hidden">
+        <h2 class="text-2xl font-bold mb-2" id="cityName">City Name</h2>
+        <img id="weatherIcon" src="" alt="Weather Icon" class="w-20 h-20 mx-auto mb-4" />
+        <p class="text-gray-600 text-lg" id="temperature">Temperature: -- °C</p>
+        <p class="text-gray-600" id="condition">Condition: --</p>
+      </div>
+      <div class="bg-white shadow-md rounded p-6 flex-1">
+        <h3 class="text-xl font-semibold mb-4">5-Day Forecast</h3>
+        <div class="overflow-x-auto">
+          <canvas id="forecastChart" class="min-w-[600px] w-full h-72"></canvas>
+        </div>
       </div>
     </div>
-
-  </div>
-</section>
-
-
+  </section>
 
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 text-center text-sm text-gray-500">
     &copy; 2025 Haeiz. All rights reserved.
   </footer>
 
-  <!-- Script -->
+  <!-- JavaScript -->
   <script>
     let chart;
 
     const cityOptions = {
-      malaysia: [
-        "Kuala Lumpur", "Putrajaya", "Shah Alam", "Petaling Jaya", "Johor Bahru",
-        "Kota Kinabalu", "Kuching", "George Town", "Ipoh", "Melaka", "Alor Setar",
-        "Seremban", "Kuantan","Kuala Terengganu", "Sibu", "Bintulu", "Miri", "Sandakan",
-        "Keningau","Kota Bharu", "Taiping", "Sungai Petani", "Batu Pahat", "Kangar",
-        "Tangkak", "Baling", "Jitra", "Kuala Kangsar", "Teluk Intan", "Pasir Gudang",
-        "Bayan Lepas", "Butterworth", "Subang Jaya", "Puchong", "Cheras", "Ampang", "Kajang",
-        "Rawang", "Selayang", "Seri Kembangan", "Besut", "Sungai Buloh", "Bangi", "Putra Heights"
-      ],
-      singapore: ["Singapore", "Jurong", "Woodlands", "Yishun", "Tampines", "Bukit Batok", "Ang Mo Kio", "Bedok", "Punggol", "Sengkang"],
-      thailand: ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Khon Kaen", "Nakhon Ratchasima", "Udon Thani", "Hat Yai", "Chiang Rai", "Surat Thani"],
-      uk: ["London", "Manchester", "Birmingham", "Liverpool", "Leeds", "Glasgow", "Edinburgh", "Bristol", "Sheffield", "Cardiff",
-          "Nottingham", "Leicester", "Coventry", "Bradford", "Belfast", "Brighton", "Newcastle upon Tyne"],
-      usa: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose"],
-      china: ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Wuhan", "Hangzhou", "Xi'an", "Nanjing", "Chongqing"],
-      india: ["Mumbai", "Delhi", "Bangalore", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Jaipur", "Lucknow"],
-      japan: ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Nagoya", "Sapporo", "Fukuoka", "Kobe", "Hiroshima", "Sendai"],
-      australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Canberra", "Hobart", "Darwin", "Newcastle"],
-      germany: ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Stuttgart", "Düsseldorf", "Dortmund", "Essen", "Leipzig"],
-      france: ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille"],
-      italy: ["Rome", "Milan", "Naples", "Turin", "Palermo", "Genoa", "Bologna", "Florence", "Catania", "Venice"],
-      canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Edmonton", "Quebec City", "Winnipeg", "Halifax", "Victoria"],
-      brazil: ["São Paulo", "Rio de Janeiro", "Salvador", "Brasília", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre"],
-      russia: ["Moscow", "Saint Petersburg", "Novosibirsk", "Yekaterinburg", "Nizhny Novgorod", "Kazan", "Chelyabinsk", "Omsk", "Rostov-on-Don", "Ufa"],
-      south_africa: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane"],
-      south_korea: ["Seoul", "Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Suwon", "Ulsan", "Changwon", "Cheongju"],
-      indonesia: ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang", "Palembang", "Makassar", "Batam", "Denpasar", "Yogyakarta"],
-      philippines: ["Manila", "Cebu City", "Davao City", "Quezon City", "Makati", "Pasig", "Taguig", "Baguio", "Iloilo City", "Cagayan de Oro"],
-      vietnam: ["Hanoi", "Ho Chi Minh City", "Da Nang", "Hai Phong", "Can Tho", "Nha Trang", "Hue", "Vung Tau", "Bien Hoa", "Thanh Hoa"],
-      mexico: ["Mexico City", "Guadalajara", "Monterrey", "Puebla", "Tijuana", "León", "Mérida", "Querétaro", "San Luis Potosí", "Hermosillo"],
-      spain: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Malaga", "Murcia", "Palma de Mallorca", "Bilbao", "Alicante"],
-      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep", "Mersin", "Kayseri"],
-      netherlands: ["Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Groningen", "Breda", "Nijmegen", "Enschede", "Haarlem"],
-      sweden: ["Stockholm", "Gothenburg", "Malmö", "Uppsala", "Linköping", "Västerås", "Örebro", "Norrköping", "Lund", "Helsingborg"],
-      poland: ["Warsaw", "Kraków", "Łódź", "Wrocław", "Poznań", "Gdańsk", "Szczecin", "Bydgoszcz", "Lublin", "Katowice"],
-      belgium: ["Brussels", "Antwerp", "Ghent", "Bruges", "Leuven", "Namur", "Liège", "Mons", "Charleroi", "Ostend"],
-      switzerland: ["Zurich", "Geneva", "Basel", "Bern", "Lausanne", "Lucerne", "St. Gallen", "Lugano", "Biel/Bienne", "Thun"]
+      malaysia: ["Kuala Lumpur", "Putrajaya", "Johor Bahru", "Kota Kinabalu", "Shah Alam", "Ipoh", "Kuching", "Petaling Jaya", "Klang", "Alor Setar", "Melaka", "Kuantan", "Seremban", "Sibu", "Bintulu", "Miri", "Kota Bharu", "Sandakan", "Tawau", "Kuala Terengganu", "Langkawi", "Butterworth", "Sungai Petani", "Batu Pahat", "Taiping", "Kangar", "Keningau", "Labuan", "Kota Baharu", "Batu Gajah", "Baling", "Teluk Intan", "Sitiawan", "Kuala Pilah", "Jitra", "Kudat", "Kuala Kangsar", "Tangkak", "Bera", "Besut", "Batu Pahat", "Kuala Lipis", "Kuala Rompin", "Kuala Berang", "Kuala Dungun", "Kuala Nerus", "Kuala Selangor"], 
+      singapore: ["Singapore", "Jurong East", "Tampines", "Woodlands", "Yishun", "Bukit Batok", "Ang Mo Kio", "Bedok", "Punggol", "Sengkang", "Hougang", "Queenstown", "Toa Payoh", "Clementi", "Serangoon", "Bukit Panjang", "Pasir Ris"],
+      thailand: ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Nakhon Ratchasima", "Khon Kaen", "Udon Thani", "Hat Yai", "Chiang Rai", "Surat Thani", "Nakhon Si Thammarat", "Rayong", "Ubon Ratchathani", "Songkhla", "Lampang"],
+      uk: ["London", "Manchester", "Birmingham", "Liverpool", "Leeds", "Glasgow", "Edinburgh", "Bristol", "Sheffield", "Newcastle upon Tyne", "Cardiff", "Nottingham", "Leicester", "Coventry", "Brighton"],
+      usa: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose", "Austin", "Jacksonville", "Fort Worth", "Columbus", "Charlotte"],
+      china: ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Hangzhou", "Wuhan", "Xi'an", "Nanjing", "Chongqing", "Tianjin", "Dongguan", "Foshan", "Suzhou", "Qingdao"],
+      india: ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Ahmedabad", "Chennai", "Kolkata", "Pune", "Jaipur", "Surat", "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane"],
+      japan: ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Nagoya", "Sapporo", "Fukuoka", "Kobe", "Hiroshima", "Sendai", "Kitakyushu", "Chiba", "Saitama", "Kawasaki", "Sakai"],
+      australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Canberra", "Hobart", "Darwin", "Newcastle", "Central Coast", "Wollongong", "Geelong", "Sunshine Coast", "Cairns"],
+      germany: ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Stuttgart", "Düsseldorf", "Dortmund", "Essen", "Leipzig", "Bremen", "Dresden", "Hannover", "Nuremberg", "Bochum"],
+      france: ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille", "Rennes", "Reims", "Le Havre", "Saint-Étienne", "Toulon"],
+      italy: ["Rome", "Milan", "Naples", "Turin", "Palermo", "Genoa", "Bologna", "Florence", "Bari", "Catania", "Venice", "Verona", "Messina", "Padua", "Trieste"],
+      canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Edmonton", "Quebec City", "Winnipeg", "Hamilton", "Kitchener", "London", "Halifax", "Victoria", "Oshawa", "Windsor"],
+      brazil: ["São Paulo", "Rio de Janeiro", "Brasília", "Salvador", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre", "Belém", "Goiânia", "Guarulhos", "Campinas", "São Luís"],
+      russia: ["Moscow", "Saint Petersburg", "Novosibirsk", "Yekaterinburg", "Nizhny Novgorod", "Kazan", "Chelyabinsk", "Omsk", "Rostov-on-Don", "Ufa", "Volgograd", "Perm", "Krasnoyarsk", "Voronezh", "Saratov"],
+      south_africa: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane", "Nelspruit", "George", "Mthatha", "Rustenburg", "Vereeniging"],
+      south_korea: ["Seoul", "Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Suwon", "Ulsan", "Changwon", "Cheongju", "Jeonju", "Goyang", "Seongnam", "Anyang", "Pyeongtaek"],
+      indonesia: ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang", "Palembang", "Makassar", "Batam", "Depok", "Tangerang", "Bekasi", "Malang", "Bandar Lampung", "Pekanbaru", "Banjarmasin"],
+      philippines: ["Manila", "Cebu City", "Davao City", "Quezon City", "Makati", "Pasig", "Taguig", "Cagayan de Oro", "Iloilo City", "Baguio City", "Zamboanga City", "Antipolo", "General Santos", "Dasmariñas", "Santa Rosa"],
+      vietnam: ["Hanoi", "Ho Chi Minh City", "Da Nang", "Hai Phong", "Can Tho", "Nha Trang", "Hue", "Bien Hoa", "Vung Tau", "Bac Ninh", "Nam Dinh", "Thai Nguyen", "Quy Nhon", "Long Xuyen", "Rach Gia"],
+      mexico: ["Mexico City", "Guadalajara", "Monterrey", "Puebla", "Tijuana", "León", "Mérida", "Querétaro", "San Luis Potosí", "Hermosillo", "Saltillo", "Chihuahua", "Culiacán", "Aguascalientes", "Torreón"],
+      spain: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Málaga", "Murcia", "Palma de Mallorca", "Bilbao", "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón", "Granada"],
+      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep", "Mersin", "Kayseri", "Eskisehir", "Samsun", "Diyarbakir", "Malatya", "Elazig"],
+      netherlands: ["Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Groningen", "Breda", "Nijmegen", "Enschede", "Haarlem", "Arnhem", "Zaanstad", "Amersfoort", "Apeldoorn", "Zwolle"],
+      sweden: ["Stockholm", "Gothenburg", "Malmö", "Uppsala", "Linköping", "Västerås", "Örebro", "Norrköping", "Lund", "Helsingborg", "Jönköping", "Borås", "Sundsvall", "Gävle", "Eskilstuna"],
+      poland: ["Warsaw", "Kraków", "Łódź", "Wrocław", "Poznań", "Gdańsk", "Szczecin", "Bydgoszcz", "Lublin", "Katowice", "Białystok", "Gdynia", "Częstochowa", "Radom", "Sosnowiec"],
+      belgium: ["Brussels", "Antwerp", "Ghent", "Bruges", "Namur", "Leuven", "Liège", "Mons", "La Louvière", "Tournai", "Mechelen", "Sint-Niklaas", "Ostend", "Kortrijk", "Hasselt"],
+      switzerland: ["Zurich", "Geneva", "Basel", "Bern", "Lausanne", "Lucerne", "St. Gallen", "Lugano", "Biel/Bienne", "Thun", "Kriens", "Neuchâtel", "Uster", "Sion", "Fribourg"]
     };
 
     function updateCities() {
@@ -133,9 +113,7 @@
       const city = document.getElementById("citySelect").value;
       const apiKey = "fff3631f7d01395a00be860118e8ec59";
 
-      // Current weather
-      const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-      const weatherRes = await fetch(weatherUrl);
+      const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
       const weatherData = await weatherRes.json();
 
       document.getElementById("weatherInfo").classList.remove("hidden");
@@ -144,9 +122,7 @@
       document.getElementById("condition").textContent = "Condition: " + weatherData.weather[0].description;
       document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
 
-      // Forecast
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
-      const forecastRes = await fetch(forecastUrl);
+      const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
       const forecastData = await forecastRes.json();
 
       const dailyTemps = {};
@@ -176,34 +152,23 @@
         options: {
           responsive: true,
           plugins: {
-            legend: {
-              display: true
-            }
+            legend: { display: true }
           }
         }
       });
     }
 
-    // Auto-detect country on load
-    window.onload = async () => {
-      try {
-        const geo = await fetch("https://ipapi.co/json").then(res => res.json());
-        const detectedCountry = geo.country_name.toLowerCase();
-        const map = {
-          "malaysia": "malaysia",
-          "singapore": "singapore",
-          "thailand": "thailand",
-          "united kingdom": "uk",
-          "united states": "usa"
-        };
-        const key = map[detectedCountry] || "malaysia";
-        document.getElementById("countrySelect").value = key;
-        updateCities();
-      } catch (e) {
-        console.log("Geo detection failed. Defaulting to Malaysia.");
-        document.getElementById("countrySelect").value = "malaysia";
-        updateCities();
-      }
+    window.onload = () => {
+      const countrySelect = document.getElementById("countrySelect");
+      const defaultCountries = Object.keys(cityOptions);
+      defaultCountries.forEach(code => {
+        const option = document.createElement("option");
+        option.value = code;
+        option.textContent = code.charAt(0).toUpperCase() + code.slice(1);
+        countrySelect.appendChild(option);
+      });
+      countrySelect.value = "malaysia";
+      updateCities();
     };
   </script>
 </body>

@@ -35,7 +35,7 @@
     <div class="bg-white shadow-md rounded p-6">
       <h3 class="text-xl font-semibold mb-4">Current Prices Chart</h3>
       <div class="flex flex-wrap items-center justify-between mb-4 gap-4">
-        <div>
+        <div class="w-full sm:w-auto text-center sm:text-left">
           <label for="currencySelect" class="text-sm font-medium text-gray-700 mr-2">Select Currency:</label>
           <select id="currencySelect" onchange="loadCoins()" class="px-3 py-1 border rounded focus:outline-none">
             <option value="usd">USD</option>
@@ -45,7 +45,7 @@
             <option value="jpy">JPY</option>
           </select>
         </div>
-        <div class="flex items-center gap-6">
+        <div class="flex flex-wrap items-center justify-between mb-4 gap-4 gap-y-2">
           <label class="flex items-center space-x-2 text-sm text-gray-700">
             <span>Log Scale</span>
             <input type="checkbox" id="scaleToggle" onchange="updateChart()" class="w-5 h-5 text-green-500 rounded focus:ring-0">
@@ -87,7 +87,7 @@
       coinData.forEach(coin => {
         const isUp = coin.price_change_percentage_24h >= 0;
         const card = document.createElement("div");
-        card.className = "min-w-[250px] max-w-[250px] bg-white rounded shadow p-4 text-center hover:shadow-lg transition";
+        card.className = "min-w-[250px] max-w-[250px] bg-white rounded shadow p-6 text-center hover:shadow-lg transition";
         card.innerHTML = `
           <img src="${coin.image}" alt="${coin.name}" class="w-12 h-12 mx-auto mb-2">
           <h3 class="text-xl font-semibold">${coin.name} <span class="text-sm text-gray-500">(${coin.symbol.toUpperCase()})</span></h3>
