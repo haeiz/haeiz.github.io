@@ -76,12 +76,41 @@
     const cityOptions = {
       malaysia: [
         "Kuala Lumpur", "Putrajaya", "Shah Alam", "Petaling Jaya", "Johor Bahru",
-        "Kota Kinabalu", "Kuching", "George Town", "Ipoh", "Melaka", "Alor Setar", "Seremban", "Kuantan"
+        "Kota Kinabalu", "Kuching", "George Town", "Ipoh", "Melaka", "Alor Setar",
+        "Seremban", "Kuantan","Kuala Terengganu", "Sibu", "Bintulu", "Miri", "Sandakan",
+        "Keningau","Kota Bharu", "Taiping", "Sungai Petani", "Batu Pahat", "Kangar",
+        "Tangkak", "Baling", "Jitra", "Kuala Kangsar", "Teluk Intan", "Pasir Gudang",
+        "Bayan Lepas", "Butterworth", "Subang Jaya", "Puchong", "Cheras", "Ampang", "Kajang",
+        "Rawang", "Selayang", "Seri Kembangan", "Besut", "Sungai Buloh", "Bangi", "Putra Heights"
       ],
-      singapore: ["Singapore"],
-      thailand: ["Bangkok", "Chiang Mai", "Phuket"],
-      uk: ["London", "Manchester", "Birmingham"],
-      usa: ["New York", "Los Angeles", "Chicago"]
+      singapore: ["Singapore", "Jurong", "Woodlands", "Yishun", "Tampines", "Bukit Batok", "Ang Mo Kio", "Bedok", "Punggol", "Sengkang"],
+      thailand: ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Khon Kaen", "Nakhon Ratchasima", "Udon Thani", "Hat Yai", "Chiang Rai", "Surat Thani"],
+      uk: ["London", "Manchester", "Birmingham", "Liverpool", "Leeds", "Glasgow", "Edinburgh", "Bristol", "Sheffield", "Cardiff",
+          "Nottingham", "Leicester", "Coventry", "Bradford", "Belfast", "Brighton", "Newcastle upon Tyne"],
+      usa: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose"],
+      china: ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chengdu", "Wuhan", "Hangzhou", "Xi'an", "Nanjing", "Chongqing"],
+      india: ["Mumbai", "Delhi", "Bangalore", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Jaipur", "Lucknow"],
+      japan: ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Nagoya", "Sapporo", "Fukuoka", "Kobe", "Hiroshima", "Sendai"],
+      australia: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Canberra", "Hobart", "Darwin", "Newcastle"],
+      germany: ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt", "Stuttgart", "Düsseldorf", "Dortmund", "Essen", "Leipzig"],
+      france: ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille"],
+      italy: ["Rome", "Milan", "Naples", "Turin", "Palermo", "Genoa", "Bologna", "Florence", "Catania", "Venice"],
+      canada: ["Toronto", "Vancouver", "Montreal", "Calgary", "Ottawa", "Edmonton", "Quebec City", "Winnipeg", "Halifax", "Victoria"],
+      brazil: ["São Paulo", "Rio de Janeiro", "Salvador", "Brasília", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre"],
+      russia: ["Moscow", "Saint Petersburg", "Novosibirsk", "Yekaterinburg", "Nizhny Novgorod", "Kazan", "Chelyabinsk", "Omsk", "Rostov-on-Don", "Ufa"],
+      south_africa: ["Johannesburg", "Cape Town", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane"],
+      south_korea: ["Seoul", "Busan", "Incheon", "Daegu", "Daejeon", "Gwangju", "Suwon", "Ulsan", "Changwon", "Cheongju"],
+      indonesia: ["Jakarta", "Surabaya", "Bandung", "Medan", "Semarang", "Palembang", "Makassar", "Batam", "Denpasar", "Yogyakarta"],
+      philippines: ["Manila", "Cebu City", "Davao City", "Quezon City", "Makati", "Pasig", "Taguig", "Baguio", "Iloilo City", "Cagayan de Oro"],
+      vietnam: ["Hanoi", "Ho Chi Minh City", "Da Nang", "Hai Phong", "Can Tho", "Nha Trang", "Hue", "Vung Tau", "Bien Hoa", "Thanh Hoa"],
+      mexico: ["Mexico City", "Guadalajara", "Monterrey", "Puebla", "Tijuana", "León", "Mérida", "Querétaro", "San Luis Potosí", "Hermosillo"],
+      spain: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Malaga", "Murcia", "Palma de Mallorca", "Bilbao", "Alicante"],
+      turkey: ["Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep", "Mersin", "Kayseri"],
+      netherlands: ["Amsterdam", "Rotterdam", "The Hague", "Utrecht", "Eindhoven", "Groningen", "Breda", "Nijmegen", "Enschede", "Haarlem"],
+      sweden: ["Stockholm", "Gothenburg", "Malmö", "Uppsala", "Linköping", "Västerås", "Örebro", "Norrköping", "Lund", "Helsingborg"],
+      poland: ["Warsaw", "Kraków", "Łódź", "Wrocław", "Poznań", "Gdańsk", "Szczecin", "Bydgoszcz", "Lublin", "Katowice"],
+      belgium: ["Brussels", "Antwerp", "Ghent", "Bruges", "Leuven", "Namur", "Liège", "Mons", "Charleroi", "Ostend"],
+      switzerland: ["Zurich", "Geneva", "Basel", "Bern", "Lausanne", "Lucerne", "St. Gallen", "Lugano", "Biel/Bienne", "Thun"]
     };
 
     function updateCities() {
