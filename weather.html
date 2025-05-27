@@ -6,6 +6,8 @@
   <title>Weather Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
@@ -24,14 +26,14 @@
   <section class="max-w-2xl mx-auto px-4 mb-8">
     <label class="block text-lg font-medium mb-2">Select Country and City</label>
     <div class="mb-4">
-      <select id="countrySelect" onchange="updateCities()" class="w-full px-4 py-2 border rounded focus:outline-none">
-        <!-- Country options populated dynamically -->
-      </select>
+      <select id="countrySelect" onchange="updateCities()" class="w-full px-4 py-2 border rounded focus:outline-none"></select>
     </div>
-    <div>
-      <select id="citySelect" onchange="getWeather()" class="w-full px-4 py-2 border rounded focus:outline-none">
-        <!-- Cities populated dynamically -->
-      </select>
+    <div class="mb-4">
+      <select id="citySelect" onchange="getWeather()" class="w-full px-4 py-2 border rounded focus:outline-none"></select>
+    </div>
+    <div class="mb-4">
+      <label for="datePicker" class="block text-sm font-medium text-gray-700 mb-1">Select Date</label>
+      <input type="text" id="datePicker" class="w-full px-4 py-2 border rounded focus:outline-none" placeholder="Choose a date" />
     </div>
   </section>
 
@@ -45,7 +47,7 @@
         <p class="text-gray-600" id="condition">Condition: --</p>
       </div>
       <div class="bg-white shadow-md rounded p-6 flex-1">
-        <h3 class="text-xl font-semibold mb-4">5-Day Forecast</h3>
+        <h3 class="text-xl font-semibold mb-4">Hourly Forecast</h3>
         <div class="overflow-x-auto">
           <canvas id="forecastChart" class="min-w-[600px] w-full h-72"></canvas>
         </div>
@@ -61,8 +63,7 @@
   <!-- JavaScript -->
   <script>
     let chart;
-
-    const cityOptions = {
+    const cityOptions = { 
       malaysia: ["Kuala Lumpur", "Putrajaya", "Johor Bahru", "Kota Kinabalu", "Shah Alam", "Ipoh", "Kuching", "Petaling Jaya", "Klang", "Alor Setar", "Melaka", "Kuantan", "Seremban", "Sibu", "Bintulu", "Miri", "Kota Bharu", "Sandakan", "Tawau", "Kuala Terengganu", "Langkawi", "Butterworth", "Sungai Petani", "Batu Pahat", "Taiping", "Kangar", "Keningau", "Labuan", "Kota Baharu", "Batu Gajah", "Baling", "Teluk Intan", "Sitiawan", "Kuala Pilah", "Jitra", "Kudat", "Kuala Kangsar", "Tangkak", "Bera", "Besut", "Batu Pahat", "Kuala Lipis", "Kuala Rompin", "Kuala Berang", "Kuala Dungun", "Kuala Nerus", "Kuala Selangor"], 
       singapore: ["Singapore", "Jurong East", "Tampines", "Woodlands", "Yishun", "Bukit Batok", "Ang Mo Kio", "Bedok", "Punggol", "Sengkang", "Hougang", "Queenstown", "Toa Payoh", "Clementi", "Serangoon", "Bukit Panjang", "Pasir Ris"],
       thailand: ["Bangkok", "Chiang Mai", "Phuket", "Pattaya", "Nakhon Ratchasima", "Khon Kaen", "Udon Thani", "Hat Yai", "Chiang Rai", "Surat Thani", "Nakhon Si Thammarat", "Rayong", "Ubon Ratchathani", "Songkhla", "Lampang"],
@@ -96,7 +97,6 @@
     function updateCities() {
       const country = document.getElementById("countrySelect").value;
       const citySelect = document.getElementById("citySelect");
-
       citySelect.innerHTML = "";
       cityOptions[country].forEach(city => {
         const option = document.createElement("option");
@@ -104,7 +104,6 @@
         option.textContent = city;
         citySelect.appendChild(option);
       });
-
       citySelect.value = cityOptions[country][0];
       getWeather();
     }
@@ -112,29 +111,26 @@
     async function getWeather() {
       const city = document.getElementById("citySelect").value;
       const apiKey = "fff3631f7d01395a00be860118e8ec59";
+      const selectedDate = document.getElementById("datePicker").value;
 
       const weatherRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
       const weatherData = await weatherRes.json();
 
       document.getElementById("weatherInfo").classList.remove("hidden");
       document.getElementById("cityName").textContent = weatherData.name;
-      document.getElementById("temperature").textContent = "Temperature: " + weatherData.main.temp + " °C";
-      document.getElementById("condition").textContent = "Condition: " + weatherData.weather[0].description;
+      document.getElementById("temperature").textContent = `Temperature: ${weatherData.main.temp} °C`;
+      document.getElementById("condition").textContent = `Condition: ${weatherData.weather[0].description}`;
       document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`;
 
       const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`);
       const forecastData = await forecastRes.json();
 
-      const dailyTemps = {};
-      forecastData.list.forEach(entry => {
-        if (entry.dt_txt.includes("12:00:00")) {
-          const date = entry.dt_txt.split(" ")[0];
-          dailyTemps[date] = entry.main.temp;
-        }
+      const filtered = forecastData.list.filter(entry => {
+        return !selectedDate || entry.dt_txt.startsWith(selectedDate);
       });
 
-      const labels = Object.keys(dailyTemps);
-      const temps = Object.values(dailyTemps);
+      const labels = filtered.map(e => e.dt_txt.split(" ")[1].slice(0, 5));
+      const temps = filtered.map(e => e.main.temp);
 
       if (chart) chart.destroy();
       chart = new Chart(document.getElementById("forecastChart"), {
@@ -142,7 +138,7 @@
         data: {
           labels: labels,
           datasets: [{
-            label: 'Forecast Temp (°C)',
+            label: 'Hourly Temp (°C)',
             data: temps,
             borderColor: 'rgb(59, 130, 246)',
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -151,17 +147,14 @@
         },
         options: {
           responsive: true,
-          plugins: {
-            legend: { display: true }
-          }
+          plugins: { legend: { display: true } }
         }
       });
     }
 
     window.onload = () => {
       const countrySelect = document.getElementById("countrySelect");
-      const defaultCountries = Object.keys(cityOptions);
-      defaultCountries.forEach(code => {
+      Object.keys(cityOptions).forEach(code => {
         const option = document.createElement("option");
         option.value = code;
         option.textContent = code.charAt(0).toUpperCase() + code.slice(1);
@@ -169,6 +162,11 @@
       });
       countrySelect.value = "malaysia";
       updateCities();
+
+      flatpickr("#datePicker", {
+        dateFormat: "Y-m-d",
+        onChange: () => getWeather()
+      });
     };
   </script>
 </body>
